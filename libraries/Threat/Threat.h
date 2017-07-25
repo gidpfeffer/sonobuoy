@@ -3,7 +3,6 @@
 
 #include "Arduino.h"
 
-
 //if you want to add a new sensor enum, add it here
 typedef enum Sensor{
   Temperature,
@@ -16,13 +15,12 @@ typedef enum Sensor{
 class Threat
 {
   public:
-    Threat(Sensor sensor, const char* message);
-    
-    Sensor setSensor();
-    const char* getMessage();
+    Threat(Sensor sensor, String message);
+    Sensor getSensor();
+    String getMessage();
 
   private:
-    const char* _message;
+    String _message;
     Sensor _sensor;
 };
 
