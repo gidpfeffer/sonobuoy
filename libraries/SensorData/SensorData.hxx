@@ -5,9 +5,10 @@ This class stored data and determines whether or not threats are caught. It has
 API's to make storing, accessing, and interpreting data more straight forward.
 */
 
-template <class T> SensorData<T>::SensorData()
+template <class T> SensorData<T>::SensorData(double threshold)
 {
    reset();
+   _threshold = threshold;
 }
 
 template <class T> void SensorData<T>::updateData(T value)
@@ -36,7 +37,7 @@ template <class T> bool SensorData<T>::isCalibrated()
 //checks for 95% probabilty given the data to determine if its a threat
 template <class T> bool SensorData<T>::checkForThreats(T newValue)
 {
-   double diff = _stdDeviation * 2.0;
+   double diff = _stdDeviation * _threshold;
    return newValue > _average + diff || newValue < _average - diff;
 }
 

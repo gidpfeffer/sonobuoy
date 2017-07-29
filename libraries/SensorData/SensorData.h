@@ -16,7 +16,13 @@ API's to make storing, accessing, and interpreting data more straight forward.
 template <class T> class SensorData
 {
 	public:
-		SensorData();
+		/*
+		the threshold signifies how many times of the standard deviation
+		the data will accept before considering it a threat
+		1.65 is 90%
+		2 is 95% and so on
+		*/
+		SensorData(double threshold);
 		void updateData(T value);
 		bool isCalibrated();
 		bool isThreatened();
@@ -36,6 +42,7 @@ template <class T> class SensorData
 		int _index;
 		bool _isThreatened;
 		bool _isCalibrated;
+		double _threshold;
 };
 
 #include "SensorData.hxx"

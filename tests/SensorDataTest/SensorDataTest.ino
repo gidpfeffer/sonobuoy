@@ -1,7 +1,7 @@
 #include <SensorData.h>
 #include <SensorData.h>
 
-SensorData<double>* sd = new SensorData<double>();
+SensorData<double>* sd = new SensorData<double>(2.0);
 int counter = 1;
 String restartingMsg = "restarting....";
 String randNumStr = "rand num: ";
