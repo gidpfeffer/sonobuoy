@@ -13,11 +13,17 @@ in the sensor data class.
 class MathHelper
 {
   public:
-    static double newAverage(double average, double oldestVal, double newestVal, int capacity);
-    static double stdDev(double average, double values[], int capcity);
+  	//Calculates the new average based on the old average
+  	template<typename T> 
+  	static double stdDev(double average, T* values, int capacity);
+  	//calculates the population standard deviation based on the data
+  	template<typename T> 
+    static double newAverage(double average, T oldestVal, T newestVal, int capacity);
 
   private:
     MathHelper(){}
 };
+
+#include "MathHelper.hxx"
 
 #endif
