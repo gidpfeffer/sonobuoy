@@ -1,7 +1,6 @@
 #include <SensorData.h>
 #include <SensorData.h>
 
-SensorData<double>* sd = new SensorData<double>(2.0);
 int counter = 1;
 String restartingMsg = "restarting....";
 String randNumStr = "rand num: ";
@@ -11,9 +10,30 @@ String stoppingMsg = "STOPPING TEST";
 String startMsg = "STARTING TEST";
 String currentDataMsg = "Current Data: ";
 
+/**
+ * Edit this section to change the tester
+ * 
+ * Threshold signifies how many multiples
+ * of the standard deviation
+ * the data will accept before
+ * deeming it a threat.
+ * 
+ * 1.65 = 90% sure it nots a threat based on normal distribution
+ * 2.00 = 95% sure it nots a threat based on normal distribution
+ */
+double THRESHOLD = 2.0;
+SensorData<double>* sd = new SensorData<double>(THRESHOLD);
+/**
+ * 
+ */
+
+ 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
+  
+  //Seed will change the random numbers generated
+  randomSeed(analogRead(0));
+  
   delay(1000);
   while(!(sd -> isCalibrated()))
   {
