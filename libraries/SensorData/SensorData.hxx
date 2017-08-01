@@ -11,6 +11,11 @@ template <class T> SensorData<T>::SensorData(double threshold)
    _threshold = threshold;
 }
 
+template <class T> SensorData<T>::~SensorData()
+{
+   delete [] _data;
+}
+
 template <class T> void SensorData<T>::updateData(T value)
 {
    //checks for threats if calibrated and not currently threatened

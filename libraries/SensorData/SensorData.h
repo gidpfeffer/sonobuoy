@@ -23,6 +23,7 @@ template <class T> class SensorData
 		2 is 95% and so on
 		*/
 		SensorData(double threshold);
+		~SensorData();
 		void updateData(T value);
 		bool isCalibrated();
 		bool isThreatened();
