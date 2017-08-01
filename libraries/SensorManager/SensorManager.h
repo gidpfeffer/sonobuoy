@@ -30,6 +30,7 @@ template <class T> class SensorManager
 		~SensorManager();
 		SensorData<T>* getSensor(int index);
 		bool setSensor(int index, SensorData<T>* sensor_data);
+		int incrementThreats();
 
 	private:
 		SensorData<T>* _sensor_data_array[NUM_SENSORS];
