@@ -31,6 +31,9 @@ template <class T> class SensorData
 		double getStdDev();
 		String dataToString();
 		void reset();
+		bool shouldBeLogged();
+		void setLogged();
+		T getThreatCausingVal();
 
 	private:
 		double updateAverage(T newValue, T oldValue);
@@ -44,6 +47,8 @@ template <class T> class SensorData
 		bool _isThreatened;
 		bool _isCalibrated;
 		double _threshold;
+		bool _hasBeenLogged;
+		T _threatCausingVal;
 };
 
 #include "SensorData.hxx"

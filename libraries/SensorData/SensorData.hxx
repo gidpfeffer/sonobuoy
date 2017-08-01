@@ -21,6 +21,10 @@ template <class T> void SensorData<T>::updateData(T value)
    //checks for threats if calibrated and not currently threatened
    if(_isCalibrated && !_isThreatened){
       _isThreatened = checkForThreats(value);
+      if(_isThreatened)
+      {
+         _threatCausingVal = value;
+      }
    }
    //updates the averages, std dev, and index if threats were not found in above call
 	if(!_isThreatened){
@@ -37,6 +41,12 @@ template <class T> void SensorData<T>::updateData(T value)
 template <class T> bool SensorData<T>::isCalibrated()
 {
 	return _isCalibrated;
+}
+
+//returns the value that caused the threat or null if none have caused a threat
+template <class T> T SensorData<T>::getThreatCausingVal()
+{
+   return _threatCausingVal;
 }
 
 //checks for 95% probabilty given the data to determine if its a threat
@@ -75,6 +85,18 @@ template <class T> bool SensorData<T>::isThreatened()
    return _isThreatened;
 }
 
+//sets has been logged to true
+template <class T> void SensorData<T>::setLogged()
+{
+   return _hasBeenLogged = true;
+}
+
+//returns whether or not the data should be logged
+template <class T> bool SensorData<T>::shouldBeLogged()
+{
+   return _isThreatened && !_hasBeenLogged;
+}
+
 //returns the average
 template <class T> double SensorData<T>::getAverage()
 {
@@ -103,9 +125,11 @@ template <class T> void SensorData<T>::reset()
 {
    _isCalibrated = false;
    _isThreatened = false;
+   _hasBeenLogged = false;
    _average = 0;
    _stdDeviation = 0;
    _index = 0;
+   _threatCausingVal = 0;
    for(int i = 0; i < MAX_CAPACITY; i++)
    {
       _data[i] = 0;
