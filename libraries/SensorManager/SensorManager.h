@@ -37,4 +37,6 @@ template <class T> class SensorManager
 		int _threat_incrementer[NUM_SENSORS];
 };
 
+#include "SensorManager.hxx"
+
 #endif
