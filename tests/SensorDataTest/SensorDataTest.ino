@@ -1,5 +1,4 @@
 #include <SensorData.h>
-#include <SensorData.h>
 
 int counter = 1;
 String restartingMsg = "restarting....";
