@@ -25,7 +25,6 @@ String DONE_SETUP_STR = "Done Calibrating";
  */
 #define LOOP_DELAY 1000
 
-
 /*
  * defines the number of loops a sensor will sit at
  * "threated" before being reset and recalibrated
@@ -49,8 +48,16 @@ String DONE_SETUP_STR = "Done Calibrating";
  */
 #define SENSOR_CAPACITY 25
 
+/**
+ * The class responsible for holding all of the data
+ */
 SensorManager<double>* manager = new SensorManager<double>
   (LOOPS_BETWEEN_RESETS, THRESHOLD, NUM_SENSORS, SENSOR_CAPACITY);
+
+/**
+ * Defines a function call for doubles
+ */
+typedef double (* dFunctionCall)();
 
 void setup() {
   Serial.begin(9600);
@@ -59,6 +66,7 @@ void setup() {
   Serial.println();
   calibrateSensors();
   Serial.println(DONE_SETUP_STR);
+  Serial.println();
   //Any other initializations you need here...
   /**
    * Setting pins ot output for example
@@ -131,68 +139,47 @@ void calibrateSensors(){
   calibrateSensor3();
 }
 
+/**
+ * Will calibrate sensor 0
+ */
 void calibrateSensor0()
 {
-  Serial.print(CALIBRATING_STR);
-  Serial.println(0);
-  Serial.println();
-  SensorData<double>* sensor0 = manager -> getSensor(0);
-  while(!sensor0 -> isCalibrated())
-  { 
-    sensor0 -> updateData(readSensor0());
-    delay(CALIBRATION_DELAY);
-  }
+  calibrateSensor("Sensor 0", manager -> getSensor(0), (dFunctionCall)readSensor0);
 }
 
 /**
- * Should be the same as void calibrateSensor0()
- * syntactically, but should update sensor1, not sensor0
- * and should use values read in by sensor 1, not 0
+ * Will calibrate sensor 1
  */
-void calibrateSensor1(){
-  Serial.print(CALIBRATING_STR);
-  Serial.println(1);
-  Serial.println();
-  SensorData<double>* sensor1 = manager -> getSensor(1);
-  while(!sensor1 -> isCalibrated())
-  { 
-    sensor1 -> updateData(readSensor1());
-    delay(CALIBRATION_DELAY);
-  }
+void calibrateSensor1()
+{
+  calibrateSensor("Sensor 1", manager -> getSensor(1), (dFunctionCall)readSensor1);
 }
 
 
 /**
- * Should be the same as void calibrateSensor0()
- * syntactically, but should update sensor2, not sensor0
- * and should use values read in by sensor 2, not 0
+ * Will calibrate sensor 2
  */
-void calibrateSensor2(){
-  Serial.print(CALIBRATING_STR);
-  Serial.println(2);
-  Serial.println();
-  SensorData<double>* sensor2 = manager -> getSensor(2);
-  while(!sensor2 -> isCalibrated())
-  { 
-    sensor2 -> updateData(readSensor2());
-    delay(CALIBRATION_DELAY);
-  }
+void calibrateSensor2()
+{
+  calibrateSensor("Sensor 2", manager -> getSensor(2), (dFunctionCall)readSensor2);
 }
 
 
 /**
- * Should be the same as void calibrateSensor0()
- * syntactically, but should update sensor3, not sensor0
- * and should use values read in by sensor 3, not 0
+ * Will calibrate sensor 3
  */
-void calibrateSensor3(){
+void calibrateSensor3()
+{
+  calibrateSensor("Sensor 3", manager -> getSensor(3), (dFunctionCall)readSensor3);
+}
+
+void calibrateSensor(String sensorName, SensorData<double>* sensor, dFunctionCall readFunct){
   Serial.print(CALIBRATING_STR);
-  Serial.println(3);
+  Serial.println(sensorName);
   Serial.println();
-  SensorData<double>* sensor3 = manager -> getSensor(3);
-  while(!sensor3 -> isCalibrated())
+  while(!(sensor -> isCalibrated()))
   { 
-    sensor3 -> updateData(readSensor3());
+    sensor -> updateData(readFunct());
     delay(CALIBRATION_DELAY);
   }
 }
