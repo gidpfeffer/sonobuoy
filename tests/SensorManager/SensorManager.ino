@@ -10,19 +10,33 @@ String STD_DEV_STR = "Std Dev: ";
 String START_STR = "Starting: ";
 String DONE_SETUP_STR = "Done Calibrating";
 
-//ms delay between reading the sensors when calibration
-//should be 1000 or higher in my opinion
+/*
+ * ms delay between reading the sensors when calibration
+ * should be 1000 (1 second) or higher in my opinion
+ */
 #define CALIBRATION_DELAY 100
 
-//ms delay between reading sensors in loop
+/*
+ * ms delay between reading sensors in loop
+ */
 #define LOOP_DELAY 1000
 
 
-//defines the number of loops a sensor will sit at
-//"threated" before being reset and recalibrated
-#define LOOPS_BETWEEN_RESETS 100
+/*
+ * defines the number of loops a sensor will sit at
+ * "threated" before being reset and recalibrated
+ */
+#define LOOPS_BETWEEN_RESETS 5
 
-SensorManager<double>* manager = new SensorManager<double>(LOOPS_BETWEEN_RESETS);
+/**
+ * Defines how many multiples of the standard deviation
+ * are needed for a sensor value to be considered a threat
+ * 
+ * 2.0 = 95% of normal distribution
+ */
+#define THRESHOLD 2.0
+
+SensorManager<double>* manager = new SensorManager<double>(LOOPS_BETWEEN_RESETS, THRESHOLD);
 
 void setup() {
   Serial.begin(9600);
