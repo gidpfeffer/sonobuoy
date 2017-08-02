@@ -54,6 +54,7 @@ template <class T> int SensorManager<T>::incrementThreats()
          else if(_threat_incrementer[i] >= RESET_STEPS)
          {
             _sensor_data_array[i] -> reset();
+            _threat_incrementer[i] = 0;
             num_reset++;
          }
          //otherwise, just increment the counter

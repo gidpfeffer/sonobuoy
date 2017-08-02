@@ -88,7 +88,7 @@ template <class T> bool SensorData<T>::isThreatened()
 //sets has been logged to true
 template <class T> void SensorData<T>::setLogged()
 {
-   return _hasBeenLogged = true;
+   _hasBeenLogged = true;
 }
 
 //returns whether or not the data should be logged

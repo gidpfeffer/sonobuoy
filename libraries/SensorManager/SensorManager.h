@@ -21,7 +21,7 @@ API's to make storing, accessing, and interpreting data more straight forward.
 
 //defines the number of steps a threat will be lock consecutively
 //before being reset
-#define RESET_STEPS 100
+#define RESET_STEPS 10
 
 template <class T> class SensorManager
 {
