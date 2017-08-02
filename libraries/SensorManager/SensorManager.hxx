@@ -3,11 +3,11 @@
 #include "Arduino.h"
 
 //sets up the sensors with the default thresholds
-template <class T> SensorManager<T>::SensorManager(int resetSteps)
+template <class T> SensorManager<T>::SensorManager(int resetSteps, double threshold)
 {
    for(int i = 0; i < NUM_SENSORS; i++)
    {
-      _sensorDataArray[i] = new SensorData<T>(DEFAULT_THRESHOLD);
+      _sensorDataArray[i] = new SensorData<T>(threshold);
       _threatIncrementer[i] = 0;
    }
    _resetSteps = resetSteps;
