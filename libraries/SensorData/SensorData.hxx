@@ -5,10 +5,13 @@ This class stored data and determines whether or not threats are caught. It has
 API's to make storing, accessing, and interpreting data more straight forward.
 */
 
-template <class T> SensorData<T>::SensorData(double threshold)
+template <class T> SensorData<T>::SensorData(double threshold, int capacity)
 {
+   _capacity = capacity;
+   _data = new T[_capacity];
    reset();
    _threshold = threshold;
+   _capacity = _capacity;
 }
 
 template <class T> SensorData<T>::~SensorData()
@@ -29,7 +32,7 @@ template <class T> void SensorData<T>::updateData(T value)
    //updates the averages, std dev, and index if threats were not found in above call
 	if(!_isThreatened){
 		updateMetrics(value);
-      _index = (_index + 1) % MAX_CAPACITY;
+      _index = (_index + 1) % _capacity;
       if(_index == 0 && !_isCalibrated)
       {
          _isCalibrated = true;
@@ -70,13 +73,13 @@ template <class T> void SensorData<T>::updateMetrics(T newValue)
 //calls the math helper to update the average
 template <class T> double SensorData<T>::updateAverage(T newValue, T oldValue)
 {
-	return MathHelper::newAverage(_average, oldValue, newValue, MAX_CAPACITY);
+	return MathHelper::newAverage(_average, oldValue, newValue, _capacity);
 }
 
 //calls the math helper to update the standard deviation (population model)
 template <class T> double SensorData<T>::updateStdDev(double newAverage)
 {
-	return MathHelper::stdDev(newAverage, _data, MAX_CAPACITY);
+	return MathHelper::stdDev(newAverage, _data, _capacity);
 }
 
 //returns whether or not the data is threatened
@@ -113,11 +116,11 @@ template <class T> double SensorData<T>::getStdDev()
 template <class T> String SensorData<T>::dataToString()
 {
    String str_data = "[";
-   for(int i = 0; i < MAX_CAPACITY - 1; i++)
+   for(int i = 0; i < _capacity - 1; i++)
    {
       str_data = str_data + _data[i] + ",";
    }
-   return str_data + _data[MAX_CAPACITY -1] + "]";
+   return str_data + _data[_capacity -1] + "]";
 }
 
 //resets all instance variables to their fresh values
@@ -130,7 +133,7 @@ template <class T> void SensorData<T>::reset()
    _stdDeviation = 0;
    _index = 0;
    _threatCausingVal = 0;
-   for(int i = 0; i < MAX_CAPACITY; i++)
+   for(int i = 0; i < _capacity; i++)
    {
       _data[i] = 0;
    }

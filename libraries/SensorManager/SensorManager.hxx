@@ -3,11 +3,14 @@
 #include "Arduino.h"
 
 //sets up the sensors with the default thresholds
-template <class T> SensorManager<T>::SensorManager(int resetSteps, double threshold)
+template <class T> SensorManager<T>::SensorManager(int resetSteps, double threshold, int numSensors, int capacity)
 {
-   for(int i = 0; i < NUM_SENSORS; i++)
+   _numSensors = numSensors;
+   _sensorDataArray = new SensorData<T>*[_numSensors];
+   _threatIncrementer = new int[_numSensors];
+   for(int i = 0; i < _numSensors; i++)
    {
-      _sensorDataArray[i] = new SensorData<T>(threshold);
+      _sensorDataArray[i] = new SensorData<T>(threshold, capacity);
       _threatIncrementer[i] = 0;
    }
    _resetSteps = resetSteps;
@@ -23,13 +26,13 @@ template <class T> SensorManager<T>::~SensorManager()
 //returns a sensor or null if out of bounds
 template <class T> SensorData<T>* SensorManager<T>::getSensor(int index)
 {
-   return (index < NUM_SENSORS && index >= 0) ? _sensorDataArray[index] : NULL;
+   return (index < _numSensors && index >= 0) ? _sensorDataArray[index] : NULL;
 }
 
 //returns whether or not the sensor was set
 template <class T> bool SensorManager<T>::setSensor(int index, SensorData<T>* sensor_data)
 {
-   if(index < NUM_SENSORS)
+   if(index < _numSensors)
    {
       _sensorDataArray[index] = sensor_data;
       return true;
@@ -41,7 +44,7 @@ template <class T> bool SensorManager<T>::setSensor(int index, SensorData<T>* se
 template <class T> int SensorManager<T>::incrementThreats()
 {
    int num_reset = 0;
-   for(int i = 0; i < NUM_SENSORS; i++)
+   for(int i = 0; i < _numSensors; i++)
    {
       //if threat incrementer isn't 0, start investigating
       if(_threatIncrementer[i] != 0)

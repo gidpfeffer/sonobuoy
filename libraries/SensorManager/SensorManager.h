@@ -11,24 +11,20 @@ API's to make storing, accessing, and interpreting data more straight forward.
 #include "Arduino.h"
 #include "SensorData.h"
 
-
-//number of sensors that will be stored in the array
-//wanted to avoid malloc'ing
-#define NUM_SENSORS 4
-
 template <class T> class SensorManager
 {
 	public:
-		SensorManager(int resetSteps, double threshold);
+		SensorManager(int resetSteps, double threshold, int numSensors, int capacity);
 		~SensorManager();
 		SensorData<T>* getSensor(int index);
 		bool setSensor(int index, SensorData<T>* sensor_data);
 		int incrementThreats();
 
 	private:
-		SensorData<T>* _sensorDataArray[NUM_SENSORS];
-		int _threatIncrementer[NUM_SENSORS];
+		SensorData<T>** _sensorDataArray;
+		int* _threatIncrementer;
 		int _resetSteps;
+		int _numSensors;
 };
 
 #include "SensorManager.hxx"

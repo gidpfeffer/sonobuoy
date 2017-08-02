@@ -34,9 +34,19 @@ String DONE_SETUP_STR = "Done Calibrating";
  * 
  * 2.0 = 95% of normal distribution
  */
-#define THRESHOLD 2.0
+#define THRESHOLD 1.0
 
-SensorManager<double>* manager = new SensorManager<double>(LOOPS_BETWEEN_RESETS, THRESHOLD);
+//number of sensors in use
+#define NUM_SENSORS 4
+
+/**
+ * amount of data point a sensor data will hold at one time. 
+ * Should be maxed out in terms of space for string
+ */
+#define SENSOR_CAPACITY 30
+
+SensorManager<double>* manager = new SensorManager<double>
+  (LOOPS_BETWEEN_RESETS, THRESHOLD, NUM_SENSORS, SENSOR_CAPACITY);
 
 void setup() {
   Serial.begin(9600);

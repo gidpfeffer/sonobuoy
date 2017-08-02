@@ -11,8 +11,6 @@ API's to make storing, accessing, and interpreting data more straight forward.
 #include "Arduino.h"
 #include "MathHelper.h"
 
-#define MAX_CAPACITY 25
-
 template <class T> class SensorData
 {
 	public:
@@ -22,7 +20,7 @@ template <class T> class SensorData
 		1.65 is 90%
 		2 is 95% and so on
 		*/
-		SensorData(double threshold);
+		SensorData(double threshold, int capacity);
 		~SensorData();
 		void updateData(T value);
 		bool isCalibrated();
@@ -40,7 +38,7 @@ template <class T> class SensorData
 		double updateStdDev(double newAverage);
 		bool checkForThreats(T newValue);
 		void updateMetrics(T newValue);
-		T _data[MAX_CAPACITY];
+		T* _data;
 		double _average;
 		double _stdDeviation;
 		int _index;
@@ -49,6 +47,7 @@ template <class T> class SensorData
 		double _threshold;
 		bool _hasBeenLogged;
 		T _threatCausingVal;
+		int _capacity;
 };
 
 #include "SensorData.hxx"
