@@ -19,22 +19,19 @@ API's to make storing, accessing, and interpreting data more straight forward.
 //Threshold the sensor datas are initialized with
 #define DEFAULT_THRESHOLD 2.0
 
-//defines the number of steps a threat will be lock consecutively
-//before being reset
-#define RESET_STEPS 10
-
 template <class T> class SensorManager
 {
 	public:
-		SensorManager();
+		SensorManager(int resetSteps);
 		~SensorManager();
 		SensorData<T>* getSensor(int index);
 		bool setSensor(int index, SensorData<T>* sensor_data);
 		int incrementThreats();
 
 	private:
-		SensorData<T>* _sensor_data_array[NUM_SENSORS];
-		int _threat_incrementer[NUM_SENSORS];
+		SensorData<T>* _sensorDataArray[NUM_SENSORS];
+		int _threatIncrementer[NUM_SENSORS];
+		int _resetSteps;
 };
 
 #include "SensorManager.hxx"

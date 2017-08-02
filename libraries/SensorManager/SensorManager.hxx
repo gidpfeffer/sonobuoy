@@ -3,26 +3,27 @@
 #include "Arduino.h"
 
 //sets up the sensors with the default thresholds
-template <class T> SensorManager<T>::SensorManager()
+template <class T> SensorManager<T>::SensorManager(int resetSteps)
 {
    for(int i = 0; i < NUM_SENSORS; i++)
    {
-      _sensor_data_array[i] = new SensorData<T>(DEFAULT_THRESHOLD);
-      _threat_incrementer[i] = 0;
+      _sensorDataArray[i] = new SensorData<T>(DEFAULT_THRESHOLD);
+      _threatIncrementer[i] = 0;
    }
+   _resetSteps = resetSteps;
 }
 
 //deletes the allocated arrays
 template <class T> SensorManager<T>::~SensorManager()
 {
-   delete [] _sensor_data_array;
-   delete [] _threat_incrementer;
+   delete [] _sensorDataArray;
+   delete [] _threatIncrementer;
 }
 
 //returns a sensor or null if out of bounds
 template <class T> SensorData<T>* SensorManager<T>::getSensor(int index)
 {
-   return (index < NUM_SENSORS && index >= 0) ? _sensor_data_array[index] : NULL;
+   return (index < NUM_SENSORS && index >= 0) ? _sensorDataArray[index] : NULL;
 }
 
 //returns whether or not the sensor was set
@@ -30,7 +31,7 @@ template <class T> bool SensorManager<T>::setSensor(int index, SensorData<T>* se
 {
    if(index < NUM_SENSORS)
    {
-      _sensor_data_array[index] = sensor_data;
+      _sensorDataArray[index] = sensor_data;
       return true;
    }
    return false;
@@ -43,30 +44,30 @@ template <class T> int SensorManager<T>::incrementThreats()
    for(int i = 0; i < NUM_SENSORS; i++)
    {
       //if threat incrementer isn't 0, start investigating
-      if(_threat_incrementer[i] != 0)
+      if(_threatIncrementer[i] != 0)
       {
          //if the sensor is no longer threatened, set incrementer to 0
-         if(!(_sensor_data_array[i] -> isThreatened()))
+         if(!(_sensorDataArray[i] -> isThreatened()))
          {
-            _threat_incrementer[i] = 0;
+            _threatIncrementer[i] = 0;
          }
          //otherwise, if the threshold is passed, reset the data
-         else if(_threat_incrementer[i] >= RESET_STEPS)
+         else if(_threatIncrementer[i] >= _resetSteps)
          {
-            _sensor_data_array[i] -> reset();
-            _threat_incrementer[i] = 0;
+            _sensorDataArray[i] -> reset();
+            _threatIncrementer[i] = 0;
             num_reset++;
          }
          //otherwise, just increment the counter
          else
          {
-            _threat_incrementer[i]++;
+            _threatIncrementer[i]++;
          }
       }
       //if sensor is threatened, start incrementing
-      else if(_sensor_data_array[i] -> isThreatened())
+      else if(_sensorDataArray[i] -> isThreatened())
       {
-         _threat_incrementer[i] = 1;
+         _threatIncrementer[i] = 1;
       }
    }
    return num_reset;

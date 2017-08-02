@@ -1,32 +1,39 @@
 #include <SensorManager.h>
 #include <SensorData.h>
 
-SensorManager<double>* manager = new SensorManager<double>();
-
-
 String DETECTED_STR = "Threat Detected: ";
 String AVERAGE_STR = "Average: ";
 String THREAT_VAL_STR = "Threat Val: ";
 String CALIBRATING_STR = "Calibrating: ";
 String DATA_STR = "Data: ";
 String STD_DEV_STR = "Std Dev: ";
+String START_STR = "Starting: ";
+String DONE_SETUP_STR = "Done Calibrating";
 
-//ms delay between reading the sensor for calibration
-#define CALLIBRATION_DELAY 1000
+//ms delay between reading the sensors when calibration
+//should be 1000 or higher in my opinion
+#define CALIBRATION_DELAY 100
 
-//ms delay between reading sensors
+//ms delay between reading sensors in loop
 #define LOOP_DELAY 1000
+
+
+//defines the number of loops a sensor will sit at
+//"threated" before being reset and recalibrated
+#define LOOPS_BETWEEN_RESETS 100
+
+SensorManager<double>* manager = new SensorManager<double>(LOOPS_BETWEEN_RESETS);
 
 void setup() {
   Serial.begin(9600);
   randomSeed(analogRead(0));
-  Serial.println("Starting");
+  Serial.println(START_STR);
   Serial.println();
   calibrateSensors();
-  Serial.println("Done Calibrating");
+  Serial.println(DONE_SETUP_STR);
   //Any other initializations you need here...
   /**
-   * Serial.begin(9600); for example
+   * Setting pins ot output for example
    */
 }
 
@@ -105,7 +112,7 @@ void calibrateSensor0()
   while(!sensor0 -> isCalibrated())
   { 
     sensor0 -> updateData(readSensor0());
-    delay(CALLIBRATION_DELAY);
+    delay(CALIBRATION_DELAY);
   }
 }
 
@@ -122,7 +129,7 @@ void calibrateSensor1(){
   while(!sensor1 -> isCalibrated())
   { 
     sensor1 -> updateData(readSensor1());
-    delay(CALLIBRATION_DELAY);
+    delay(CALIBRATION_DELAY);
   }
 }
 
@@ -140,7 +147,7 @@ void calibrateSensor2(){
   while(!sensor2 -> isCalibrated())
   { 
     sensor2 -> updateData(readSensor2());
-    delay(CALLIBRATION_DELAY);
+    delay(CALIBRATION_DELAY);
   }
 }
 
@@ -158,7 +165,7 @@ void calibrateSensor3(){
   while(!sensor3 -> isCalibrated())
   { 
     sensor3 -> updateData(readSensor3());
-    delay(CALLIBRATION_DELAY);
+    delay(CALIBRATION_DELAY);
   }
 }
 
