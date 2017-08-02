@@ -41,9 +41,9 @@ String DONE_SETUP_STR = "Done Calibrating";
 
 /**
  * amount of data point a sensor data will hold at one time. 
- * Should  be maxed out in terms of space
+ * Should be maxed out in terms of space for string
  */
-#define SENSOR_CAPACITY 50
+#define SENSOR_CAPACITY 30
 
 SensorManager<double>* manager = new SensorManager<double>
   (LOOPS_BETWEEN_RESETS, THRESHOLD, NUM_SENSORS, SENSOR_CAPACITY);
