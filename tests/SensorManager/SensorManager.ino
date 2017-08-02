@@ -1,19 +1,39 @@
 #include <SensorManager.h>
 #include <SensorData.h>
 
-SensorManager<double>* manager = new SensorManager<double>();
+String DETECTED_STR = "Threat Detected: ";
+String AVERAGE_STR = "Average: ";
+String THREAT_VAL_STR = "Threat Val: ";
+String CALIBRATING_STR = "Calibrating: ";
+String DATA_STR = "Data: ";
+String STD_DEV_STR = "Std Dev: ";
+String START_STR = "Starting: ";
+String DONE_SETUP_STR = "Done Calibrating";
+
+//ms delay between reading the sensors when calibration
+//should be 1000 or higher in my opinion
+#define CALIBRATION_DELAY 100
+
+//ms delay between reading sensors in loop
+#define LOOP_DELAY 1000
+
+
+//defines the number of loops a sensor will sit at
+//"threated" before being reset and recalibrated
+#define LOOPS_BETWEEN_RESETS 100
+
+SensorManager<double>* manager = new SensorManager<double>(LOOPS_BETWEEN_RESETS);
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("Starting");
+  randomSeed(analogRead(0));
+  Serial.println(START_STR);
+  Serial.println();
   calibrateSensors();
-  Serial.println("Done Calibrating");
-  delay(100);
-  Serial.println(manager -> getSensor(0) -> dataToString());
-  Serial.println(manager -> getSensor(1) -> dataToString());
+  Serial.println(DONE_SETUP_STR);
   //Any other initializations you need here...
   /**
-   * Serial.begin(9600); for example
+   * Setting pins ot output for example
    */
 }
 
@@ -23,7 +43,7 @@ void loop() {
   updateValues();
   logThreats();
   incrementThreatCounters();
-
+  delay(LOOP_DELAY);
   /**
    * PROCESS NRF COMMANDS HERE IF APPLICABLE
    */
@@ -85,11 +105,14 @@ void calibrateSensors(){
 
 void calibrateSensor0()
 {
+  Serial.print(CALIBRATING_STR);
+  Serial.println(0);
+  Serial.println();
   SensorData<double>* sensor0 = manager -> getSensor(0);
   while(!sensor0 -> isCalibrated())
   { 
     sensor0 -> updateData(readSensor0());
-    delay(100);
+    delay(CALIBRATION_DELAY);
   }
 }
 
@@ -99,11 +122,14 @@ void calibrateSensor0()
  * and should use values read in by sensor 1, not 0
  */
 void calibrateSensor1(){
+  Serial.print(CALIBRATING_STR);
+  Serial.println(1);
+  Serial.println();
   SensorData<double>* sensor1 = manager -> getSensor(1);
   while(!sensor1 -> isCalibrated())
   { 
     sensor1 -> updateData(readSensor1());
-    delay(100);
+    delay(CALIBRATION_DELAY);
   }
 }
 
@@ -114,11 +140,14 @@ void calibrateSensor1(){
  * and should use values read in by sensor 2, not 0
  */
 void calibrateSensor2(){
+  Serial.print(CALIBRATING_STR);
+  Serial.println(2);
+  Serial.println();
   SensorData<double>* sensor2 = manager -> getSensor(2);
   while(!sensor2 -> isCalibrated())
   { 
     sensor2 -> updateData(readSensor2());
-    delay(100);
+    delay(CALIBRATION_DELAY);
   }
 }
 
@@ -129,11 +158,14 @@ void calibrateSensor2(){
  * and should use values read in by sensor 3, not 0
  */
 void calibrateSensor3(){
+  Serial.print(CALIBRATING_STR);
+  Serial.println(3);
+  Serial.println();
   SensorData<double>* sensor3 = manager -> getSensor(3);
   while(!sensor3 -> isCalibrated())
   { 
     sensor3 -> updateData(readSensor3());
-    delay(100);
+    delay(CALIBRATION_DELAY);
   }
 }
 
@@ -146,19 +178,19 @@ void calibrateSensor3(){
  */
 double readSensor0(){
   //for example, return the acceleromator value
-  return 1;
+  return random(1, 25);
 }
 
 double readSensor1(){
-  return 2;
+  return random(1, 10);
 }
 
 double readSensor2(){
-  return 3;
+  return random(1, 50);
 }
 
 double readSensor3(){
-  return 4;
+  return random(1, 15);
 }
 
 
@@ -183,16 +215,81 @@ void logSensor0(){
   /**
    * LOG SOMETHING HERE
    */
+   Serial.print(DETECTED_STR);
+   Serial.println(0);
+   Serial.print(AVERAGE_STR);
+   Serial.println(average);
+   Serial.print(STD_DEV_STR);
+   Serial.println(stdDev);
+   Serial.print(THREAT_VAL_STR);
+   Serial.println(threatVal);
+   Serial.print(DATA_STR);
+   Serial.println(dataStr);
+   Serial.println();
 }
 
 void logSensor1(){
-  //same syntax as logSensor0()
+  double average = manager -> getSensor(1) -> getAverage();
+  double stdDev = manager -> getSensor(1) -> getStdDev();
+  String dataStr = manager -> getSensor(1) -> dataToString();
+  double threatVal = manager -> getSensor(1) -> getThreatCausingVal();
+
+  /**
+   * LOG SOMETHING HERE
+   */
+   Serial.print(DETECTED_STR);
+   Serial.println(1);
+   Serial.print(AVERAGE_STR);
+   Serial.println(average);
+   Serial.print(STD_DEV_STR);
+   Serial.println(stdDev);
+   Serial.print(THREAT_VAL_STR);
+   Serial.println(threatVal);
+   Serial.print(DATA_STR);
+   Serial.println(dataStr);
+   Serial.println();
 }
 
 void logSensor2(){
-  //same syntax as logSensor0()
+  double average = manager -> getSensor(2) -> getAverage();
+  double stdDev = manager -> getSensor(2) -> getStdDev();
+  String dataStr = manager -> getSensor(2) -> dataToString();
+  double threatVal = manager -> getSensor(2) -> getThreatCausingVal();
+
+  /**
+   * LOG SOMETHING HERE
+   */
+   Serial.print(DETECTED_STR);
+   Serial.println(2);
+   Serial.print(AVERAGE_STR);
+   Serial.println(average);
+   Serial.print(STD_DEV_STR);
+   Serial.println(stdDev);
+   Serial.print(THREAT_VAL_STR);
+   Serial.println(threatVal);
+   Serial.print(DATA_STR);
+   Serial.println(dataStr);
+   Serial.println();
 }
 
 void logSensor3(){
-  //same syntax as logSensor0()
+  double average = manager -> getSensor(3) -> getAverage();
+  double stdDev = manager -> getSensor(3) -> getStdDev();
+  String dataStr = manager -> getSensor(3) -> dataToString();
+  double threatVal = manager -> getSensor(3) -> getThreatCausingVal();
+
+  /**
+   * LOG SOMETHING HERE
+   */
+   Serial.print(DETECTED_STR);
+   Serial.println(3);
+   Serial.print(AVERAGE_STR);
+   Serial.println(average);
+   Serial.print(STD_DEV_STR);
+   Serial.println(stdDev);
+   Serial.print(THREAT_VAL_STR);
+   Serial.println(threatVal);
+   Serial.print(DATA_STR);
+   Serial.println(dataStr);
+   Serial.println();
 }
