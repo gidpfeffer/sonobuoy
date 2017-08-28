@@ -16,6 +16,10 @@ In our case, we assumed a normal distribution of the sensor data. This allowed f
 
 The buoy is built from 2 pvc pipes, one inside the other. A sand ballast was put between the outter and inner pvc pipes to orient the buoy and protect from shock. The microcontroller is housed in the internal pipe which is then sealed off from the water using pvc pipe caps. Holes were drilled for the waterproof sensors to be wired to the microcontroller and then sealed.
 
+<p align="center">
+  <img src="media/3DMock.png" alt="Image of Buoy Design" width="250" height="250">
+</p>
+
 ## Extendability
 
 More complex anomaly detection algorithms could be implemented in the future. Additionally, given longer calibration times, more significant amounts of data could be used to analyze potential threats. 
